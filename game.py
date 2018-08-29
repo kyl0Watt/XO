@@ -5,7 +5,6 @@ import random
 f_player = 'X'
 s_player = 'O'
 move_mark = '+'
-before_mark = ' '
 
 game_field = [' '] * 9  # 3 * 3 field
 current_position = 4
@@ -77,15 +76,17 @@ def user_input():
     return user_input()
 
 
-def move(game_field, key):
+def move(game_field, key, before_mark):                                                 # TODO: Make it work!!!
     """Move move_mark"""
     if (key == 'w' or 's' or 'a' or 'd') and (0 <= (current_position + MOVE[key]) <= 8):
-        l_before_mark = game_field[current_position+MOVE[key]]
+        if before_mark:
+            game_field[current_position] = before_mark
+        before_mark = game_field[current_position+MOVE[key]]
         game_field[current_position + MOVE[key]] = move_mark
-        return game_field, l_before_mark
+        return before_mark
     elif (key == 'y') and (game_field[current_position] == ' '):
         game_field[current_position] = f_player
-        return game_field, False
+        return False
     else:
         print('\nWrong move? try again\n')
     return False  # return game field and before_mark
@@ -106,6 +107,7 @@ def main():
     """Main game function"""
     print("Move mark '+' by pressing 'w' 'a' 's' 'd' and 'Enter'")
     print_field(game_field)
+    before_mark = ' '
 
     while True:
         if check_win(game_field) == f_player:
@@ -118,13 +120,14 @@ def main():
             print('GAME OVER!!! NO ONE WIN ' * 8)
             break
         key = user_input()
-        move(game_field, key)
+        before_mark = move(game_field, key, before_mark)
         check_win(game_field)
         print_field(game_field)
-        print('*'*15, 'AI turn:\n')
-        ai_input(game_field)
-        check_win(game_field)
-        print_field(game_field)
+        if key == 'y':
+            print('*' * 15, 'AI turn:\n')
+            ai_input(game_field)
+            check_win(game_field)
+            print_field(game_field)
 
 
 if __name__ == '__main__':
