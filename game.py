@@ -50,7 +50,7 @@ def print_field(game_field):
           | {} | {} | {} |
           | {} | {} | {} |
           | {} | {} | {} |
-          _____________\n
+          _____________
           '''.format(game_field[0], game_field[1], game_field[2],
                      game_field[3], game_field[4], game_field[5],
                      game_field[6], game_field[7], game_field[8]))
@@ -59,15 +59,7 @@ def print_field(game_field):
 def user_input():
     """receive user input and return move key or confirm choice"""
     key = input('Move position or press y to do turn: ')
-    if key == 'w':
-        return key
-    elif key == 's':
-        return key
-    elif key == 'd':
-        return key
-    elif key == 'a':
-        return key
-    elif key == 'y':
+    if key == 'w' or 's' or 'd' or 'a' or 'y':
         return key
     elif key == 'h':
         print('There is no help yet')
