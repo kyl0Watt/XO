@@ -7,8 +7,8 @@ s_player = 'O'
 move_mark = '+'
 
 game_field = [' '] * 9  # 3 * 3 field
-current_position = 4
-game_field[current_position] = move_mark  #start position
+start_position = 4
+game_field[start_position] = move_mark  #start position
 
 MOVE = {'w': -3,
         's': 3,
@@ -44,8 +44,7 @@ def check_win(game_field):
 
 def print_field(game_field):
     """print game field"""
-    print('/n',
-          '''
+    print('''
           _____________
           | {} | {} | {} |
           | {} | {} | {} |
@@ -68,20 +67,21 @@ def user_input():
     return user_input()
 
 
-def move(game_field, key, before_mark):                                                 # TODO: Make it work!!!
+def move(game_field, key, before_mark, new_position):                                                 # TODO: Make it work!!!
     """Move move_mark"""
-    if (key == 'w' or 's' or 'a' or 'd') and (0 <= (current_position + MOVE[key]) <= 8):
+    if (key == 'w' or 's' or 'a' or 'd') and (0 <= (new_position + MOVE[key]) <= 8):
         if before_mark:
-            game_field[current_position] = before_mark
-        before_mark = game_field[current_position+MOVE[key]]
-        game_field[current_position + MOVE[key]] = move_mark
-        return before_mark
-    elif (key == 'y') and (game_field[current_position] == ' '):
-        game_field[current_position] = f_player
-        return False
+            game_field[new_position] = before_mark
+        before_mark = game_field[new_position+MOVE[key]]
+        game_field[new_position + MOVE[key]] = move_mark
+        new_position = new_position + MOVE[key]
+        return before_mark, new_position
+    elif (key == 'y') and (before_mark == ' '):
+        game_field[new_position] = f_player
+        return before_mark, new_position
     else:
-        print('\nWrong move? try again\n')
-    return False  # return game field and before_mark
+        print('\nWrong move! try again\n')
+    return before_mark, new_position
 
 
 def ai_input(game_field):
@@ -97,22 +97,24 @@ def ai_input(game_field):
 
 def main():
     """Main game function"""
-    print("Move mark '+' by pressing 'w' 'a' 's' 'd' and 'Enter'")
+    print("\nMove mark '+' by pressing 'w' 'a' 's' 'd' and 'Enter'")
     print_field(game_field)
     before_mark = ' '
+    new_position =start_position
 
     while True:
-        if check_win(game_field) == f_player:
+        ch_win = check_win(game_field)
+        if ch_win == f_player:
             print('Human WIN!!!! ' * 5)
             break
-        elif check_win(game_field) == s_player:
+        elif ch_win == s_player:
             print('AI WIN!!!!! ' * 5)
             break
-        elif check_win(game_field) == 'NoOne':
+        elif ch_win == 'NoOne':
             print('GAME OVER!!! NO ONE WIN ' * 8)
             break
         key = user_input()
-        before_mark = move(game_field, key, before_mark)
+        before_mark, new_position = move(game_field, key, before_mark, new_position)
         check_win(game_field)
         print_field(game_field)
         if key == 'y':
